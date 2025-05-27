@@ -1,8 +1,7 @@
 // ==== API Keys ====
-const openaiApiKey = process.env.OPENAI_API_KEY;
-const semanticScholarApiKey = process.env.SEMANTIC_SCHOLAR_API_KEY;
+const openaiApiKey = window.APP_CONFIG.OPENAI_API_KEY;
+const semanticScholarApiKey = window.APP_CONFIG.SEMANTIC_SCHOLAR_API_KEY;
 
-let studyCache = {};
 let noteCache = [];
 let ttsAudio = null;
 

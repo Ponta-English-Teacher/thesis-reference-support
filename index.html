@@ -4,13 +4,7 @@
   <meta charset="UTF-8" />
   <title>📚 Thesis Writing Assistant</title>
   <link rel="stylesheet" href="style.css">
-  <script>
-    // Vercel will replace these placeholders with your actual API keys
-    window.APP_CONFIG = {
-      OPENAI_API_KEY: "%VITE_OPENAI_API_KEY%",
-      SEMANTIC_SCHOLAR_API_KEY: "%VITE_SEMANTIC_SCHOLAR_API_KEY%"
-    };
-  </script>
+  
 </head>
 <body>
   <h1>🎓 Thesis Writing Assistant</h1>
@@ -118,6 +112,7 @@
   <button id="copyToClipboard">📋 Copy</button>
   <button id="closeGlossary">❌ Close</button>
 </div>
+  <script src="config.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
