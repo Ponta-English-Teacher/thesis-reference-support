@@ -3,6 +3,7 @@ const openaiApiKey = window.APP_CONFIG.OPENAI_API_KEY;
 const semanticScholarApiKey = window.APP_CONFIG.SEMANTIC_SCHOLAR_API_KEY;
 
 let noteCache = [];
+let studyCache = {}; // Initialize studyCache as an empty object
 let ttsAudio = null;
 
 // ==== Utility Functions ====
