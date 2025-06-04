@@ -200,23 +200,25 @@ Provide a clear, structured, academic explanation or advice. If applicable, incl
     if (studyCache[topic]) {
       renderStudies(studyCache[topic], studyBox);
       generateNote(topic, studyCache[topic], box);
-    } else {
-      const url = `https://api.semanticscholar.org/graph/v1/paper/search?query=${encodeURIComponent(topic)}&limit=3&fields=title,authors,year,url,abstract,journal`;
+  } else { // This is the 'else' block for when studyCache[topic] is not found
+      const proxyUrl = `/api/semantic-scholar?query=${encodeURIComponent(topic)}&fields=title,authors,year,url,abstract,journal`; // Correct!
       try {
-        const response = await fetch(url, {
-          headers: semanticScholarApiKey ? { "x-api-key": semanticScholarApiKey } : {}
-        });
+        const response = await fetch(proxyUrl); // <<<--- CORRECTED: Now uses proxyUrl and NO headers object here!
         const data = await response.json();
-        if (data.data) {
-          studyCache[topic] = data.data;
-          renderStudies(data.data, studyBox);
-          generateNote(topic, data.data, box);
+
+        if (data.data) { // Semantic Scholar's response structure usually has a 'data' array
+            studyCache[topic] = data.data;
+            renderStudies(data.data, studyBox);
+            generateNote(topic, data.data, box);
+        } else if (data.error) { // If the proxy sent an error
+            studyBox.textContent = `Error: ${data.error} - ${data.details ? JSON.stringify(data.details) : ''}`;
+            console.error("Error from proxy:", data);
         } else {
-          studyBox.textContent = "No studies found.";
+            studyBox.textContent = "No studies found.";
         }
       } catch (err) {
         studyBox.textContent = "Error fetching studies.";
-        console.error(err);
+        console.error("Error fetching studies from proxy:", err);
       }
     }
   };
