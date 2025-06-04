@@ -1,5 +1,5 @@
 // api/semantic-scholar.js
-import fetch from 'node-fetch';
+import fetch from 'node-fetch'; // Required for Vercel Serverless Functions
 
 export default async (req, res) => {
     // Retrieve the API key from environment variables for security
@@ -13,8 +13,13 @@ export default async (req, res) => {
     }
 
     const encodedQuery = encodeURIComponent(query);
+    // Ensure limit is set correctly, for example, to 3 as indicated by the original string.
+    // If 'limit' is also passed from the client, you'd extract it from req.query.
+    const limit = 3; // Or parse from req.query if it's dynamic
     const encodedFields = fields ? `&fields=${encodeURIComponent(fields)}` : '';
-    const url = `https://api.semanticscholar.org/graph/v1/paper/search?query=<span class="math-inline">\{encodedQuery\}&limit\=3</span>{encodedFields}`;
+
+    // CORRECTED URL CONSTRUCTION
+    const url = `https://api.semanticscholar.org/graph/v1/paper/search?query=${encodedQuery}&limit=${limit}${encodedFields}`;
 
     try {
         const headers = {};
@@ -25,12 +30,11 @@ export default async (req, res) => {
         const response = await fetch(url, { headers });
         const data = await response.json();
 
-        // Vercel's default CORS headers handle most cases.
-        // If you need more specific CORS control for local dev/testing,
-        // you might add headers here, but typically Vercel handles it.
+        // Send the response back to the client
         res.status(response.status).json(data);
     } catch (error) {
         console.error('Semantic Scholar proxy error:', error);
-        res.status(500).send('Error fetching data from Semantic Scholar.');
+        // Ensure the error response is also JSON for consistency if the frontend expects it
+        res.status(500).json({ error: 'Error fetching data from Semantic Scholar.', details: error.message });
     }
 };
